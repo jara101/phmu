@@ -25,7 +25,10 @@ def main(argv):
         return
 
     if argv['check']:
-        pass
+        frames = phmu.frames.Frames(argv['<input>'])
+        print(frames.check())
+        return
+            
 
     storage = phmu.storage.Storage()
     frames = phmu.frames.Frames(argv['<input>'])

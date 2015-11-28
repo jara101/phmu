@@ -7,14 +7,16 @@ import os
 
 
 class Frames():
-
+    
+    time_fmt_iso = "%Y-%m-%d %H:%M:%S.%f"
+    time_fmt_date = "%Y-%m-%d"
+    time_fmt_time = "%H:%M:%S.%f"
+    
     def __init__(self, source):
         self.source = source
         self.headers = {}
 
-        #self.db_init()
         self.read_all_headers()
-        #self.save_headers_to_db()
         pass
 
     def read_all_headers(self):
@@ -26,12 +28,6 @@ class Frames():
         for fits_file in files:
             self.headers[fits_file] = fits.getheader(fits_file)
 
-    def save_headers_to_db(self):
-
-        for frame in self.headers:
-            print(frame, '\t', self.headers[frame]['OBJECT'])
-
-
     def get_headers(self):
         """ Vrati slovnik vhondny pro zapis do storage
         """
@@ -42,11 +38,11 @@ class Frames():
                 #print(self.headers[k]['DATE-OBS'])
 
                     #time = datetime.datetime.strptime(self.headers[k]['TIME-OBS'], "%H:%M:%S.%f")
-            date = datetime.datetime.strptime(self.headers[k]['DATE-OBS']+'  '+
-                self.headers[k]['TIME-OBS'], "%Y-%m-%d %H:%M:%S.%f")
             #date_time = datetime.datetime.combine(date,time)
             #print(date)
-
+            
+            date = datetime.datetime.strptime(self.headers[k]['DATE-OBS']+'  '+
+                self.headers[k]['TIME-OBS'], time_fmt_iso)
             jd = 0.0
             hjd = 0.0
 
@@ -64,6 +60,46 @@ class Frames():
                             'hjd':hjd
                             })
         return result
+    
+    def _check_time_format(self,frame,key,time_format):
+        """Return True, if frame has time_format in key.
+        """
+        try:
+            print(datetime.datetime.strptime(frame[key], time_format))
+        except ValueError:
+            return False
+        return True
+
+    # TODO: Napat funkci, ktera rekne so s tim casem....
+        
+    def check(self):
+        """Check if frames are valid => return True.
+        """
+        mandatory = ['OBJECT','IMAGETYP','FILTER','EXPTIME','OBSERVAT','GAIN',
+                    'RA','DEC','DATE-OBS','JD','HJD']
+        is_valid = True
+        for header in self.headers:
+
+            for key in mandatory:
+                if key not in self.headers[header]:
+                    print("In file "+header+" missing "+key)
+                    is_valid = False
+
+            is_date-obs_iso = self._check_time_format(self.headers[header],'DATE-OBS',Frames.time_fmt_iso)
+            if not is_date-obs_iso:
+                is_date-obs_date = self._check_time_format(self.headers[header],'DATE-OBS',Frames.time_fmt_date)
+                if not is_date-obs_date:
+                    is_valid = False
+                    print("In header bad values in: DATE-OBS")
+                
+                is_time-obs_time = self._check_time_format(self.headers[header],'TIME-OBS',Frames.time_fmt_time)
+                if not is_time-obs_time:
+                    is_valid = False
+                    print("In header bad values in: TIME-OBS")
+                
+
+        return is_valid
+            
 """
 datetime.datetime.combine(
 datetime.date(
