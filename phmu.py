@@ -15,7 +15,7 @@ Options:
 from docopt import docopt
 import os
 import phmu.frames
-
+import phmu.storage
 
 def main(argv):
     
@@ -23,7 +23,9 @@ def main(argv):
         print('ERROR: Given path "{0}" isn\'t valid!'.format(argv['<input>']))
         return
 
+    storage = phmu.storage.Storage()
     frames = phmu.frames.Frames(argv['<input>'])
+    storage.add_frames(frames.get_headers())
 
 if __name__ == "__main__":
     argv = docopt(__doc__, version='phmu 0.0.1')

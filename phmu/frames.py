@@ -13,7 +13,7 @@ class Frames():
         
         #self.db_init()
         self.read_all_headers()
-        self.save_headers_to_db()
+        #self.save_headers_to_db()
         pass
 
     def read_all_headers(self):
@@ -30,3 +30,17 @@ class Frames():
         for frame in self.headers:
             print(frame, '\t', self.headers[frame]['OBJECT'])
 
+
+    def get_headers(self):
+        """ Vrati slovnik vhondny pro zapis do storage
+        """
+        result = []
+        for k in self.headers:
+            result.append({'filename':k,
+                            'name':self.headers[k]['OBJECT'],
+                            'obj_type':self.headers[k]['IMAGETYP'],
+                            'filter':self.headers[k]['FILTER'],
+                            'exp_duration':self.headers[k]['EXPTIME'],
+                            'place':self.headers[k]['OBSERVAT']
+                            })
+        return result

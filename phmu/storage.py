@@ -14,23 +14,43 @@ class Storage():
         c = conn.cursor()
         c.execute('''
             CREATE TABLE frames (
-                id INT PRIMARY KEY,
                 filename TEXT,
                 name TEXT,
                 obj_type TEXT,
                 filter TEXT,
                 exp_duration REAL,
-                place TEXT,
-                exp_time DATETIME,
-                gain REAL,
-                ra REAL,
-                dec REAL,
-                jd REAL,
-                hjd REAl
+                place TEXT
             )
         ''')
         conn.commit()
         conn.close()
 
     def add_frames(self, frames):
-        pass
+        
+        query = []
+        
+        for frame in frames:
+            data = (frame['filename'],
+                    frame['name'],
+                    frame['obj_type'],
+                    frame['filter'],
+                    frame['exp_duration'],
+                    frame['place']
+                    #frame['exp_time']                  
+                    )
+            query.append(data)
+       
+        conn = sqlite3.connect('phmu.db')
+        c = conn.cursor()
+        c.executemany('INSERT INTO frames VALUES (?,?,?,?,?,?)', query)
+        conn.commit()
+        conn.close()
+        
+"""
+                exp_time DATETIME,
+                gain REAL,
+                ra REAL,
+                dec REAL,
+                jd REAL,
+                hjd REAl
+"""
