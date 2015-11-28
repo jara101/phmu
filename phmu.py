@@ -4,6 +4,7 @@
 
 Usage:
     phmu.py <input>
+    phmu.py check <input>
     phmu.py (-h | --help)
     phmu.py --version
 
@@ -22,6 +23,9 @@ def main(argv):
     if not os.path.exists(argv['<input>']):
         print('ERROR: Given path "{0}" isn\'t valid!'.format(argv['<input>']))
         return
+
+    if argv['check']:
+        pass
 
     storage = phmu.storage.Storage()
     frames = phmu.frames.Frames(argv['<input>'])

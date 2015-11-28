@@ -19,38 +19,40 @@ class Storage():
                 obj_type TEXT,
                 filter TEXT,
                 exp_duration REAL,
-                place TEXT
+                place TEXT,
+                gain REAL,
+                ra REAL,
+                dec REAL,
+                exp_time DATETIME,
+                jd REAL,
+                hjd REAl
             )
         ''')
         conn.commit()
         conn.close()
 
     def add_frames(self, frames):
-        
+
         query = []
-        
+
         for frame in frames:
             data = (frame['filename'],
                     frame['name'],
                     frame['obj_type'],
                     frame['filter'],
                     frame['exp_duration'],
-                    frame['place']
-                    #frame['exp_time']                  
+                    frame['place'],
+                    frame['gain'],
+                    frame['ra'],
+                    frame['dec'],
+                    frame['exp_time'],
+                    frame['jd'],
+                    frame['hjd']
                     )
             query.append(data)
-       
+
         conn = sqlite3.connect('phmu.db')
         c = conn.cursor()
-        c.executemany('INSERT INTO frames VALUES (?,?,?,?,?,?)', query)
+        c.executemany('INSERT INTO frames VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', query)
         conn.commit()
         conn.close()
-        
-"""
-                exp_time DATETIME,
-                gain REAL,
-                ra REAL,
-                dec REAL,
-                jd REAL,
-                hjd REAl
-"""
