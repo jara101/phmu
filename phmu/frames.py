@@ -3,7 +3,6 @@
 
 from astropy.io import fits
 import os
-import sqlite3
 
 
 class Frames():
@@ -12,34 +11,10 @@ class Frames():
         self.source = source
         self.headers = {}
         
-        self.db_init()
+        #self.db_init()
         self.read_all_headers()
         self.save_headers_to_db()
         pass
-
-    def db_init(self):
-        conn = sqlite3.connect('phmu.db')
-        c = conn.cursor()
-        c.execute('''
-            CREATE TABLE frames (
-                id INT PRIMARY KEY,
-                filename TEXT,
-                name TEXT,
-                obj_type TEXT,
-                filter TEXT,
-                exp_duration REAL,
-                place TEXT,
-                exp_time DATETIME,
-                gain REAL,
-                ra REAL,
-                dec REAL,
-                jd REAL,
-                hjd REAl
-            )
-        ''')
-        conn.commit()
-        conn.close()
-        
 
     def read_all_headers(self):
         # TODO: Check that we work only with .fits files.
